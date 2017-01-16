@@ -11,6 +11,8 @@ namespace ControlPlane
 
         #region Variables
         private PC _packetController;
+        private string _localHostName;
+        private string _myDomainNccIpAddress;
         private Dictionary<int, Call> _callDictionary;  //słownik wiążący callID z jego parametrami
         #endregion
 
@@ -21,54 +23,86 @@ namespace ControlPlane
         public CPCC(string configurationFolderPath, PC packetController)
         {
             _packetController = packetController;
-
             InitialiseVariables(configurationFolderPath);
         }
 
-        //metoda wczytuje słownik jeżeli już jakiś istnieje
         private void InitialiseVariables(string configurationFolderPath)
         {
             //configurationFolderPath będzie zawierał między innymi plik CPCC_configuration.xml
             //tutaj będziemy go parsować
-        }
-
-
-        //metoda będzie wywoływana w węzle klienckim, jeżeli będziemy chcieli utworzyć sesję lub ją zamknąć
-        //będziemy wysyłać żądaną przepustowość oraz miejsce docelowe
-        public void CPCCInvoke(string callingID, int callingCapacity)
-        {
-
-        }
-
-        //metoda wywołana, jezeli CPCCInvoke skończy działanie
-        static public void CPCCEnd(IAsyncResult async)
-        {
-
+            //wyjmujemy z niego _localHostName oraz wartosci słownika
         }
         #endregion
 
 
-        #region MethodesFromstandardization
-        //1
-        private SignalMessage CallRequest(int _callID, string _callingID, string _calledID, int _capacity)
+        #region Call_Modificate_Start_Methodes
+        //metoda odpowiedzialna za znalezienie unikalnego identyfikatora sesji
+        private int GetCallNewIndex()
         {
-            SignalMessage smCR = new SignalMessage();
-            smCR._callID = _callID;
-            smCR._callingID = _callingID;
-            smCR._calledID = _calledID;
-            smCR._capacity = _capacity;
+            int index = _callDictionary.Count();
+            if (index == 0)
+                index++;
+            while (_callDictionary.ContainsKey(index))
+                index++;
 
-            return smCR;
+            return index;
         }
+
+        //metoda będzie wywoływana w węzle klienckim, jeżeli będziemy chcieli utworzyć sesję
+        //będziemy wysyłać żądaną przepustowość oraz miejsce docelowe
+        public string CpccCallRequest(string calledID, int callingCapacity)
+        {
+            int callID = GetCallNewIndex();
+            SignalMessage signalMessage = CallRequest(callID, _localHostName, calledID, callingCapacity);
+
+            
+
+            return null;
+        }
+
+        public string CpccCallRealise(string calledID, int callingCapacity)
+        {
+            return null;
+        }
+
+        //metoda wywołana, jezeli CPCCInvoke skończy działanie
+        static public void CpccCallEnd(IAsyncResult async)
+        {
+
+        }
+
+        #endregion
+
+
+        #region Methodes_From_Standardization
+        //1
+        private SignalMessage CallRequest(int callID, string callingID, string calledID, int capacity)
+        {
+            SignalMessage message = new SignalMessage()
+            {
+                DestinationIpAddress = _myDomainNccIpAddress,
+
+                SignalMessageType = SignalMessage.SignalType.CallRequest,
+                CallID = callID,
+                CallingID = callingID,
+                CalledID = calledID,
+                CallingCapacity = capacity
+            };
+   
+            return message;
+        }
+
+
+
+
+
+
+
         //8
         private SignalMessage CallAccept(int _callID, bool _confirmation)
         {
-            SignalMessage smCA = new SignalMessage();
-            smCA._callID = _callID;
-            smCA._confirmation = _confirmation;
-          
 
-            return smCA;
+            return null;
         }
 
         //14
@@ -76,7 +110,7 @@ namespace ControlPlane
         {
             SignalMessage smCMA = new SignalMessage();
             smCMA._modificationID = _modificationID;
-           
+
 
             return smCMA;
         }
@@ -84,12 +118,18 @@ namespace ControlPlane
 
     }
 
+    //wartości, jakie może przyjmować status zgłoszenia
+    public enum CallState
+    {
+        inProgress, rejected, confirmed
+    }
+
     //struktura zgłoszenia
     public struct Call
     {
-        public string CallingID { get; private set; }
-        public string CalledID { get; private set; }
-        public int CallingCapacity { get; private set; }
-        public bool Confirmed { get; private set; }
+        string _callingID;
+        string _calledID;
+        int _callingCapacity;
+        CallState _state;
     }
 }

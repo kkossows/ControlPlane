@@ -44,9 +44,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CC.cs" />
-    <Compile Include="ClientCallComponent.cs" />
     <Compile Include="ControlNode.cs" />
     <Compile Include="CPCC.cs" />
+    <Compile Include="DeviceClass.cs" />
     <Compile Include="DirectoryClass.cs" />
     <Compile Include="LRM.cs" />
     <Compile Include="NCC.cs" />

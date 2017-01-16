@@ -6,25 +6,36 @@ using System.Threading.Tasks;
 
 namespace ControlPlane
 {
-    class SignalMessage
+    public class SignalMessage
     {
+        #region General
+        public SignalType SignalMessageType { get; set; }
+        public string DestinationIpAddress { get; set; }
+        #endregion
+
+        #region Call
         public int CallID { get; set; }
         public string CallingID { get; set; }
         public string CalledID { get; set; }
-        public int Capacity { get; set; }
-        public bool Confirmation { get; set; }
-        public string Name { get; set; }
-        public string Type { get; set; }
+        public int CallingCapacity { get; set; }
+        #endregion
+
+        #region Connection
+        public int ConnnectionID { get; set; }
         public int LabelIN { get; set; }
         public int LabelOUT { get; set; }
         public int ModificationID { get; set; }
+        #endregion
+
+
+        public enum SignalType
+        {
+            CallRequest, CallAccept
+        };
 
         public SignalMessage()
         {
 
         }
-
-
-
     }
 }
