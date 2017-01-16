@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Sockets;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
 
 
 //Tutaj musze zrobić wysyłanie pakietów 
-namespace DomainController
+namespace ControlPlane
 {
     class PC
     {
@@ -29,23 +30,6 @@ namespace DomainController
         string cloudIpAddress;
         int cloudPort;
         
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

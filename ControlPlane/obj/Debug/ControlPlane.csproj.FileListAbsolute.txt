@@ -1,1 +1,3 @@
 D:\Programowanie_C#\GitHub_Projects\MPLS-ControlPlane\ControlPlane\ControlPlane\bin\Debug\ControlPlane.exe.config
+D:\Programowanie_C#\GitHub_Projects\MPLS-ControlPlane\ControlPlane\bin\Debug\ControlPlane.exe.config
+D:\Programowanie_C#\GitHub_Projects\MPLS-ControlPlane\ControlPlane\obj\Debug\ControlPlane.csprojResolveAssemblyReference.cache

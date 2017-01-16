@@ -4,23 +4,21 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DomainController
+namespace ControlPlane
 {
     class LRM
     {
-        //nazwa domeny lub podsieci do której należy dany LRM
-        private string _areaName;
 
-        //agent służący do komunikacji węzlów sterowania
-        //...
-
-        //słownik zawierający id_SNPP wraz z przypisanym do niego SNPP
-        //private Dictionary<int, SNPP> _SnppDictionary;
-
-        //słownik zawierający nazwę podsieci wraz z przypisanej do niej adresem agenta LRM
-        private Dictionary<string, string> _LrmOverSubnetworksDictionary;
+        #region Variables
+        private string _areaName;   //nazwa domeny lub podsieci do której należy dany LRM 
+        private PC _packetController;   //agent służący do komunikacji węzlów sterowania 
+        private Dictionary<string, string> _lrmToSubnetworksDictionary;    //słownik zawierający nazwę podsieci wraz z przypisanej do niej adresem agenta LRM
+        #endregion
 
 
+        #region Properties
+
+        #endregion
 
         public LRM()
         {
@@ -33,37 +31,24 @@ namespace DomainController
 
         }
 
-        /*
-         * Przychodzi (1,5)
-         * przegląda 1 i patrzy, czy jego areaName = areaName LRM'a
-         * - 1 należy do jego area więc bierze losową wartość z availableLabels
-         * 
-         * przegląda 5 
-         * - 5 nie należy do jego area wiec odnajduje w slowniku adres do LRM'a odpowiadającemu tej 5-tce
-         * - wysyła do tego SNPNegotiation
-         * -dostaje odpowiedź pozytywną (tamten tworzy SNP u siebie związany z tym połączeniem)
-         * - tworzy SNP związany z SNPP o id 5
-         * - tworzy SNP związany z SNPP o id 1
-         * Wysyłamy odpowiedż do CC, że zostało zrealizowane 
-         * 
-         * 
-         */
-
-        /*
-         * Przychodzi (7,9)
-         * - sprawdzamy 7 i widzimy, że nie nalezy do naszej area
-         * - losujemy dowolną lambde z możliwych na tym łączu
-         * - odnajdujemy adres LRS'a zwiazanego z 7
-         * - wysyłamy do niego SNPNegotiation
-         * - dostajemy odpowiedz pozytywną (tamten tworzy SNP u siebie związany z tym połaczeniem)
-         * 
-         * -sprawdzamy 9
-         * - odnajdujemy adres LRS'a zwiazanego z 9
-         * - wysyłamy do niego SNPNegotiation
-         * - dostajemy odpowiedz pozytywna
-         * 
-         * -tworzymy lokalne SNP zwiazane z 7 i 9
-         * 
-         */
     }
 }
+
+
+
+
+/*
+        * OGÓLNY SCHEMAT DZIAŁANIA
+        * 1. otrzymuje parę SNPP
+        * 2. Wyszukuję pierwszą w słowniku
+        * 3. Sprawdz, czy nie ma jakiegoś SNP związanego z tym connectionID
+        * 4. Jeżeli się znajduje to odczytaj jego etykietę i przejdź do kroku 9
+        * 5. Jeżeli nie ma, to wylosuj etykiete z możliwych availableLabes
+        * 6. Sprawdzam czy SNPP nalezy do mojego areaName czy nie
+        * 7. Jeżeli nie należy to wyszukuje jego LRM'a i wysyłam do niego SNPNegotiation z zadaną etykietą
+        * 8. Alokuje u siebie SNP związany z pierwszą SNPP
+        * 9. Dla 2 SNPP postępuje analogicznie
+        * 10. W odpowiedzi zwracam Zbiór zewnętrzych id SNP (id tych SNP które sie utworzyły w podsieciach)
+        *       
+        * 
+        */
